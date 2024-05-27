@@ -1,118 +1,50 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- */
+import {View, Text, ScrollView, Button} from 'react-native';
+import React, {useState} from 'react';
+import {Input, TextComponent} from './src/components';
 
-import React from 'react';
-import type {PropsWithChildren} from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
+const initState = {
+  name: '',
+  age: '',
+  address: '',
+  phone: '',
+  email: '',
+  imgUrl: '',
+};
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
+const App = () => {
+  const [profile, setProfile] = useState<any>(initState);
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+  const handleChangeValue = (key: string, val: string) => {
+    const data: any = {...profile};
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
+    data[`${key}`] = val;
 
-function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    setProfile(data);
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
-        </View>
-      </ScrollView>
-    </SafeAreaView>
-  );
-}
+    <ScrollView style={{backgroundColor: 'white', padding: 20, flex: 1}}>
+      {Object.keys(profile).map(key => (
+        <Input
+          value={profile[`${key}`]}
+          placeholder={key}
+          keyboardType={
+            key === 'age'
+              ? 'number-pad'
+              : key === 'phone'
+              ? 'phone-pad'
+              : 'default'
+          }
+          autoCapitalize="none"
+          allowClear
+          onChange={val => handleChangeValue(key, val)}
+        />
+      ))}
 
-const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 24,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-});
+      <Button title="Reset" onPress={() => setProfile(initState)} />
+      <Button title="OK" onPress={() => console.log(profile)} />
+    </ScrollView>
+  );
+};
 
 export default App;
